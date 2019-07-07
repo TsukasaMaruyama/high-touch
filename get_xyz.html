@@ -1,0 +1,28 @@
+
+<p id="gravity"></p>
+<p id="accele"></p>
+<p id="rotation"></p>
+
+<script>
+var $id = function(id)
+{
+    return document.getElementById(id);
+}
+ 
+window.addEventListener('devicemotion', function(e){
+    // 重力加速度(3軸)
+    var gravity = e.accelerationIncludingGravity;
+    $id("gravity").innerHTML = gravity.x + ', ' + gravity.y + ', ' + gravity.z;
+    
+    // ここからはiPhone 4 以上でしか動かない
+    // 私は iPhone 3GS なのでオフる(悔しいのでw)
+ 
+    // 加速度(3軸)
+    var accele = e.acceleration;
+    $id("accele").innerHTML = accele.x + ', ' + accele.y + ', ' + accele.z;
+    
+    // 回転加速度
+    var rotation = e.rotationRate;
+    $id("rotation").innerHTML = rotation.x + ', ' + rotation.y + ', ' + rotation.z;
+});
+</script>

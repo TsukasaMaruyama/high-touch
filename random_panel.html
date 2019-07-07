@@ -1,0 +1,181 @@
+<div>
+    <table>
+        <tbody>
+            <tr>
+                <td id="cell0">1</td>
+                <td id="cell1">2</td>
+                <td id="cell2">3</td>
+            </tr>
+            <tr>
+                <td id="cell3">4</td>
+                <td id="cell4">5</td>
+                <td id="cell5">6</td>
+            </tr>
+            <tr>
+                <td id="cell6">7</td>
+                <td id="cell7">8</td>
+                <td id="cell8">9</td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+<p id="count">
+
+</p>
+<em></em>
+
+<div>
+    <button id="run">
+        RUN
+    </button>
+
+    <button id="stop">
+        STOP
+    </button>
+</div>
+
+<hr>
+<p>
+RUN：開始
+</p>
+<p>
+STOP：停止
+</p>
+
+<script>
+(function() {
+    var tableBackgroundColor = "#F0F0F0";
+    var cellBackgroundColor = "#F9F9F9";
+    var selectedBackgroundColor = "#FF8888";
+    var MIN = 0;
+    var MAX = 8;
+    var rndLastTime;
+    var stopFlag = false;
+
+    function changeBackColor(cellIdStr) {
+        for (var i = 0; i < 9; i++) {
+            document.getElementById("cell" + i).style.backgroundColor = cellBackgroundColor;
+        }
+        document.getElementById(cellIdStr).style.backgroundColor = selectedBackgroundColor;
+    }
+
+    function reverseBackColor(cellIdStr) {
+        for (var i = 0; i < 9; i++) {
+            document.getElementById("cell" + i).style.backgroundColor = selectedBackgroundColor;
+        }
+        document.getElementById(cellIdStr).style.backgroundColor = cellBackgroundColor;
+    }
+
+    function selectAnyCell() {
+        var rnd = generateRndIntNum(MIN, MAX);
+        while (1) {
+            if (rnd != rndLastTime) {
+                changeBackColor("cell" + rnd);
+                return "cell" + rnd;
+            } else {
+                rnd = generateRndIntNum(MIN, MAX);
+            }
+            }
+        return "cell" + rnd;
+    }
+
+    function generateRndIntNum(min, max) {
+        return Math.floor(Math.random() * (max + 1 - min)) + min;
+    }
+
+    function LaunchSelctionMoving() {
+        var count = 0;
+        var lastCell = "";
+
+        var timer = setInterval(function() {
+
+            if (stopFlag) {
+                count++;
+            }
+
+            if (count < 60) {
+                selectAnyCell();
+            } else if (count < 100) {
+                if (count % 2 === 0) {
+                    selectAnyCell();
+                }
+            } else if (count < 120) {
+                if (count % 3 === 0) {
+                    selectAnyCell();
+                }
+            } else if (count < 180) {
+                if (count % 4 === 0) {
+                    selectAnyCell();
+                }
+            } else if (count < 200) {
+                if (count % 5 === 0) {
+                    selectAnyCell();
+                }
+            } else {
+                lastCell = selectAnyCell();
+                count = 0;
+           clearInterval(timer);
+                endEvent();
+            }
+        }, 40);
+
+
+        var endEvent = function() {
+            count++;
+            if (count % 2 === 0) {
+                changeBackColor(lastCell);
+            } else {
+                reverseBackColor(lastCell);
+            }
+            var id = setTimeout(endEvent, 115);
+            if (count > 9) {
+                clearTimeout(id);
+                endInitialize();
+            }
+        };
+    }
+
+    function endInitialize() {
+        startFlag = false;
+        stopFlag = false;
+    }
+
+    var startFlag = false;
+
+    document.getElementById("run").addEventListener("click", function() {
+        if (startFlag === false) {
+            LaunchSelctionMoving();
+            startFlag = true;
+        } else {
+            startFlag = false;
+        }
+
+    });
+
+    document.getElementById("stop").addEventListener("click", function() {
+        if (startFlag) {
+            stopFlag = true;
+        }
+    });
+
+})();
+</script>
+
+<style>
+    table {
+    width: 100%;
+    text-align: center;
+    background-color: #E0E0E0;
+}
+
+tr {
+    width: 100%;
+}
+
+td {
+    height: 80px;
+    /*width:33%;*/
+    background-color: #F9F9F9;
+}
+</style>
